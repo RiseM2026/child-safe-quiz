@@ -1246,10 +1246,10 @@ async function submitToMSForm(data) {
   } catch (err) {
     console.error("6b error (cert still shown):", err);
   }
-}!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+}
+</script>
+</body>
+</html>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Child Safe Reporting Conduct – Rise Education</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Source+Sans+3:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -2470,51 +2470,7 @@ function downloadCertificate() {
 // Submits directly to Microsoft Forms API with correct field IDs
 // Non-blocking — certificate (6a) always shows regardless
 // ══════════════════════════════════════════════════════════════
-async function submitToMSForm(data) {
-  try {
-    // Microsoft Forms internal API endpoint
-    const formId = CONFIG.MS_FORM_ID;
-    const submitUrl = `https://forms.office.com/formapi/api/${formId}/users/responses`;
 
-    // Build payload matching the form field order exactly
-    // Fields: 1=studentName, 2=studentEmail, 3=score, 4=completionDate,
-    //         5=certificateId, 6=courseName, 7=attempt
-    const payload = {
-      startDate: new Date().toISOString(),
-      submitDate: new Date().toISOString(),
-      answers: [
-        { questionId: "r1bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: data.name },
-        { questionId: "r2bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: data.email },
-        { questionId: "r3bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: String(data.score) },
-        { questionId: "r4bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: data.completionDate },
-        { questionId: "r5bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: data.certId },
-        { questionId: "r6bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: "Child Safe Reporting Conduct" },
-        { questionId: "r7bac02b9dcaf4c3aa0ee9f75b5be1a51", answer1: String(data.attempt) }
-      ]
-    };
-
-    // Use no-cors mode to avoid CORS errors — form still receives submission
-    fetch(submitUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).then(() => {
-      console.log("✅ 6b: MS Form submitted — Power Automate will send certificate email shortly.");
-    }).catch(() => {
-      // Fallback — use iframe method
-      console.log("⚠️ Fetch blocked, trying iframe fallback...");
-      const iframe = document.createElement('iframe');
-      iframe.style.cssText = 'display:none;width:0;height:0;';
-      document.body.appendChild(iframe);
-      iframe.src = `https://forms.cloud.microsoft/r/${formId}?studentName=${encodeURIComponent(data.name)}&studentEmail=${encodeURIComponent(data.email)}&score=${data.score}&completionDate=${encodeURIComponent(data.completionDate)}&certificateId=${encodeURIComponent(data.certId)}&courseName=Child+Safe+Reporting+Conduct&attempt=${data.attempt}`;
-      setTimeout(() => iframe.parentNode && iframe.parentNode.removeChild(iframe), 8000);
-    });
-
-  } catch (err) {
-    console.error("6b submission error (cert still shown):", err);
-  }
-}
 </script>
 </body>
 </html>
