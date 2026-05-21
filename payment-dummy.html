@@ -325,7 +325,7 @@
     <div class="card-body" id="payment-form">
       <div class="form-group">
         <label>Full Name *</label>
-        <input type="text" id="student-name" placeholder="Enter your full name">
+        <input type="text" id="student-name" placeholder="Enter your full name = payment name = certificate name">
       </div>
       <div class="form-group">
         <label>Email Address *</label>
@@ -370,7 +370,7 @@
 
       <p style="font-size:13px;color:var(--grey);margin-bottom:16px;">Please check your inbox (and spam/junk folder). Once you pass the quiz, your Certificate of Completion will be emailed to you automatically.</p>
 
-      <a href="https://risem2026.github.io/child-safe-quiz/" class="btn-quiz">
+      <a href="#" id="quiz-link" class="btn-quiz">
         Go to Quiz →
       </a>
     </div>
@@ -432,7 +432,7 @@ async function processPayment() {
       transaction_id: txnId,
       course_name:   "Child Safe Reporting Conduct",
       video_link:    "https://riseeducation-my.sharepoint.com/:v:/g/personal/marketing_riseeducation_edu_au/IQAEO1SMaqGqSYKRcaR4OhaOAaB6l17gTfRynX5XIMM8A58?e=UsJ8AG",
-      quiz_link:     "https://risem2026.github.io/child-safe-quiz/"
+      quiz_link:     `https://risem2026.github.io/child-safe-quiz/?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`
     });
 
     console.log("✅ Flow 1 triggered — course access email sending to student");
@@ -442,6 +442,10 @@ async function processPayment() {
     document.getElementById('success-name').textContent  = name;
     document.getElementById('success-email').textContent = email;
     document.getElementById('success-screen').classList.add('show');
+
+    // Set personalised quiz link with name and email locked in URL
+    const quizUrl = `https://risem2026.github.io/child-safe-quiz/?name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`;
+    document.getElementById('quiz-link').href = quizUrl;
 
   } catch (err) {
     console.error("Payment flow error:", err);

@@ -463,7 +463,7 @@
       <h2 style="margin-bottom:20px;">Your Details</h2>
       <div class="form-group">
         <label>Full Name *</label>
-        <input type="text" id="student-name" placeholder="Enter your full name — this will appear on your certificate" />
+        <input type="text" id="student-name" placeholder="Enter your full name = payment name = certificate name" />
       </div>
       <div class="form-group">
         <label>Email Address *</label>
@@ -1018,6 +1018,32 @@ function startQuiz() {
   state.attempt = 1;
   beginAttempt();
 }
+
+// Pre-fill name and email from URL params (set by payment page)
+function prefillFromURL() {
+  const params = new URLSearchParams(window.location.search);
+  const name  = params.get('name');
+  const email = params.get('email');
+  if (name) {
+    const nameField = document.getElementById('student-name');
+    nameField.value = name;
+    nameField.readOnly = true;
+    nameField.style.background = '#F5F7FA';
+    nameField.style.color = '#5A6A7E';
+    nameField.title = 'Name locked to payment details';
+  }
+  if (email) {
+    const emailField = document.getElementById('student-email');
+    emailField.value = email;
+    emailField.readOnly = true;
+    emailField.style.background = '#F5F7FA';
+    emailField.style.color = '#5A6A7E';
+    emailField.title = 'Email locked to payment details';
+  }
+}
+
+// Run on page load
+window.addEventListener('DOMContentLoaded', prefillFromURL);
 
 function beginAttempt() {
   state.quiz = shuffle(QUESTION_POOL).slice(0, CONFIG.QUESTIONS_PER_QUIZ);
